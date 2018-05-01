@@ -211,7 +211,7 @@ function keyPressed() {
     let rightFree = true;
     for (let x = 9; x >= 0; x--) {
       for (let y = 17; y >= 0; y--) {
-        if (grid[y][x] === 1 && grid[y][x + 1] === 2) {
+        if (grid[y][x] === 1 && (grid[y][x + 1] === 2 || typeof grid[y][x + 1] === 'undefined')) {
           rightFree = false;
         }
       }
@@ -233,7 +233,7 @@ function keyPressed() {
     let leftFree = true;
     for (let x = 0; x < 10; x++) {
       for (let y = 0; y < 18; y++) {
-        if (grid[y][x] === 1 && grid[y][x - 1] === 2) {
+        if (grid[y][x] === 1 && (grid[y][x - 1] === 2 || typeof grid[y][x - 1] === 'undefined')) {
           leftFree = false;
         }
       }
