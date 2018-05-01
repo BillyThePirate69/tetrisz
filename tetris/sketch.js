@@ -18,7 +18,7 @@ let grid = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [2, 0, 2, 2, 2, 2, 2, 2, 2, 2],
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -34,12 +34,13 @@ let winHeight = 1200;
 let winWidth = 1600;
 let startScreenOn = true;
 let gameScreenOn = false;
+let deathScreenOn = false;
 let playButton, playButtonHighlighted;
 let block;
 let pickedShape;
 let spaceFree = true;
 let threePresent;
-
+let score = 0;
 
 // Setup Functions //
 function preload() {
@@ -57,6 +58,9 @@ Array.prototype.sample = function() {
 }
 
 // Functions //
+
+// Display Screen Functions //
+////////////////////////////////////////////////////////////////////////////////
 
 function displayStartScreen() {
   for (let i = 0; i < winHeight; i++) { //Displays gradient background
@@ -78,7 +82,8 @@ function playButtonFun() {
   }
 }
 
-
+// Game Screen Functions //
+////////////////////////////////////////////////////////////////////////////////
 
 function displayGameScreen() {
   background(0);
@@ -103,6 +108,7 @@ function displayGameScreen() {
 
   pickShape();
   moveBlocks();
+  scoreChecker();
 }
 
 
@@ -166,6 +172,14 @@ function spawnShape() {
 
 function moveBlocks() {
   if (frameCount % 30 === 0) {
+    downFree = true;
+    for (let y = 17; y >= 0; y--) {
+      for (let x = 9; x >= 0; x--) {
+        if (grid[y][x] === 1 && (grid[y + 1][x] === 2 || typeof grid[y + 1][x] === 'undefined')) {
+          downFree = false;
+        }
+      }
+    }
     for (let x = 9; x >= 0; x--) {
       for (let y = 17; y >= 0; y--) {
         if (grid[y][x] === 1) {
@@ -174,7 +188,7 @@ function moveBlocks() {
           } else if (y + 1 === 17) {
             grid[y + 1][x] = 3;
             grid[y][x] = 0;
-          } else {
+          } else if (downFree === true) {
             grid[y + 1][x] = 1;
             grid[y][x] = 0;
           }
@@ -252,16 +266,51 @@ function keyPressed() {
 
 
   if (keyCode === DOWN_ARROW) {
-
+    let downFree = true;
+    for (let x = 0; x < 10; x++) {
+      for (let y = 0; y < 18; y++) {
+        if (grid[y][x] === 1 && (grid[y + 1][x] === 2 || typeof grid[y + 1][x] === 'undefined' || y + 1 === 17)) {
+          downFree = false;
+        }
+      }
+    }
+    if (downFree === true) {
+      for (let y = 17; y >= 0; y--) {
+        for (let x = 9; x >= 0; x--) {
+          if (grid[y][x] === 1) {
+            grid[y + 1][x] = 1;
+            grid[y][x] = 0;
+          }
+        }
+      }
+    }
   }
 }
 
-function death() {
+function scoreChecker() {
+  for (let y = 0; y < 18; y++) {
+    if (grid[y][0] === 2 && grid[y][1] === 2 && grid[y][2] === 2 && grid[y][3] === 2 && grid[y][4] === 2 && grid[y][5] === 2) {
+      if (grid[y][6] === 2 && grid[y][7] === 2 && grid[y][8] === 2 && grid[y][9] === 2) {
+        score = score + 100;
+        for (let x = 0; x < 10; x++) {
+          grid[y][x] = 0
+        }
+      }
+    }
+  }
+}
 
+// Death Screen Functions //
+////////////////////////////////////////////////////////////////////////////////
+
+function death() {
+  startScreenOn = false;
+  deathScreenOn = true;
 }
 
 
 // Loop //
+////////////////////////////////////////////////////////////////////////////////
 function draw() {
   if (startScreenOn === true) {
     displayStartScreen()
