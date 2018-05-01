@@ -4,7 +4,7 @@
 
 // global variables //
 
-// 0 = Empty location, 2 = Stationary block, 1 = Moving block
+// 0 = Empty location, 3 = stopped moving block, 2 = Stationary block, 1 = Moving block
 let grid = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -38,6 +38,7 @@ let playButton, playButtonHighlighted;
 let block;
 let pickedShape;
 let spaceFree = true;
+let threePresent;
 
 
 // Setup Functions //
@@ -91,19 +92,23 @@ function displayGameScreen() {
         fill(0, 100, 100);
       }
       if (grid[y][x] === 2) {
-        fill["green"]
+        fill("green");
+      }
+      if (grid[y][x] === 3) {
+        fill("red");
       }
       rect(550 + x * cellSize, 200 + y * cellSize, cellSize, cellSize);
     }
   }
-  pickShape()
-  moveBlocks()
+
+  pickShape();
+  moveBlocks();
 }
 
 
 function pickShape() {
-  fill("green")
   if (spaceFree === true) {
+    spaceFree = false;
     currentShape = shapes.sample();
     spawnShape()
     for (let x = 0; x < shapeGrid.length; x++) {
@@ -111,12 +116,10 @@ function pickShape() {
         grid[0 + x][5 + y] = shapeGrid[x][y]
       }
     }
-    spaceFree = false;
   }
 }
 
 function spawnShape() {
-  print("working")
   if (currentShape === 'I') {
     shapeGrid = [
       [0, 1, 0],
@@ -166,10 +169,10 @@ function moveBlocks() {
     for (let x = 9; x >= 0; x--) {
       for (let y = 17; y >= 0; y--) {
         if (grid[y][x] === 1) {
-          if (grid[y + 1][x] === 2) {
-            grid[y][x] = 2;
+          if (grid[y + 1][x] === 2 || grid[y + 1][x] === 3) {
+            grid[y][x] = 3;
           } else if (y + 1 === 17) {
-            grid[y + 1][x] = 2;
+            grid[y + 1][x] = 3;
             grid[y][x] = 0;
           } else {
             grid[y + 1][x] = 1;
@@ -179,17 +182,61 @@ function moveBlocks() {
       }
     }
   }
+  checkSpace()
 }
 
-// function stopBlocks() {
-//   for (let x = 0; x < 10; x++) {
-//     for (let y = 0; y < 18; y++) {
-//       if (grid[y][x] === 1) {
-//         grid[y][x] = 2;
-//       }
-//     }
-//   }
-// }
+function checkSpace() {
+  threePresent = false;
+  for (let x = 9; x >= 0; x--) {
+    for (let y = 17; y >= 0; y--) {
+      if (grid[y][x] === 3) {
+        threePresent = true;
+      }
+    }
+  }
+  if (threePresent === true) {
+    for (let x = 9; x >= 0; x--) {
+      for (let y = 17; y >= 0; y--) {
+        if (grid[y][x] === 3 || grid[y][x] === 1) {
+          grid[y][x] = 2;
+        }
+      }
+    }
+    spaceFree = true;
+  }
+}
+
+function keyPressed() {
+  if (keyCode === RIGHT_ARROW) {
+    right:
+    for (let x = 9; x >= 0; x--) {
+      for (let y = 17; y >= 0; y--) {
+        if (grid[y][x] === 1 && grid[y][x + 1] !== 2) {
+          grid[y][x + 1] = 1;
+          grid[y][x] = 0;
+        } else if (grid[y][x] === 1 && grid[y][x + 1] === 2) {
+          break right;
+        }
+      }
+    }
+  }
+  if (keyCode === LEFT_ARROW) {
+    left:
+    for (let x = 0; x < 10; x++) {
+      for (let y = 0; y < 18; y++) {
+        if (grid[y][x] === 1 && grid[y][x - 1] !== 2) {
+          grid[y][x - 1] = 1;
+          grid[y][x] = 0;
+        } else if (grid[y][x] === 1 && grid[y][x - 1] === 2) {
+          break left;
+        }
+      }
+    }
+  }
+  if (keyCode === DOWN_ARROW) {
+
+  }
+}
 
 function death() {
 
