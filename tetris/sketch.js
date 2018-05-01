@@ -208,31 +208,49 @@ function checkSpace() {
 
 function keyPressed() {
   if (keyCode === RIGHT_ARROW) {
-    right:
+    let rightFree = true;
     for (let x = 9; x >= 0; x--) {
       for (let y = 17; y >= 0; y--) {
-        if (grid[y][x] === 1 && grid[y][x + 1] !== 2) {
-          grid[y][x + 1] = 1;
-          grid[y][x] = 0;
-        } else if (grid[y][x] === 1 && grid[y][x + 1] === 2) {
-          break right;
+        if (grid[y][x] === 1 && grid[y][x + 1] === 2) {
+          rightFree = false;
+        }
+      }
+    }
+    if (rightFree === true) {
+      for (let x = 9; x >= 0; x--) {
+        for (let y = 17; y >= 0; y--) {
+          if (grid[y][x] === 1) {
+            grid[y][x + 1] = 1;
+            grid[y][x] = 0;
+          }
         }
       }
     }
   }
+
+
   if (keyCode === LEFT_ARROW) {
-    left:
+    let leftFree = true;
     for (let x = 0; x < 10; x++) {
       for (let y = 0; y < 18; y++) {
-        if (grid[y][x] === 1 && grid[y][x - 1] !== 2) {
-          grid[y][x - 1] = 1;
-          grid[y][x] = 0;
-        } else if (grid[y][x] === 1 && grid[y][x - 1] === 2) {
-          break left;
+        if (grid[y][x] === 1 && grid[y][x - 1] === 2) {
+          leftFree = false;
+        }
+      }
+    }
+    if (leftFree === true) {
+      for (let x = 0; x < 10; x++) {
+        for (let y = 0; y < 18; y++) {
+          if (grid[y][x] === 1) {
+            grid[y][x - 1] = 1;
+            grid[y][x] = 0;
+          }
         }
       }
     }
   }
+
+
   if (keyCode === DOWN_ARROW) {
 
   }
