@@ -18,17 +18,19 @@ let grid = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [2, 0, 2, 2, 2, 2, 2, 2, 2, 2],
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 2, 2, 2, 2, 2, 2, 2, 2, 2]
 ];
 
 let shapeGrid;
 
-let shapes = ['S', 'Z', 'I', 'L', 'T', 'J', 'square']
+let shapes = ['S', 'Z', 'I', 'L', 'T', 'J', 'square'];
+let purpleCube, blueCube, redCube, orangeCube, greenCube, yellowCube;
+let colors = ["purpleCube", "blueCube", "redCube", "orangeCube", "greenCube"];
 let cellSize = 50;
 let winHeight = 1200;
 let winWidth = 1600;
@@ -37,24 +39,40 @@ let gameScreenOn = false;
 let deathScreenOn = false;
 let playButton, playButtonHighlighted;
 let block;
+let border;
 let pickedShape;
 let spaceFree = true;
 let threePresent;
 let score = 0;
+let currentShape;
+let secondShape;
+let thirdShape;
+let randomColor;
 
 // Setup Functions //
 function preload() {
-  playButton = loadImage("images/playButton.png")
-  playButtonHighlighted = loadImage("images/playButtonHighlighted.png")
-  tetrisFont = loadFont("assets/ModernTetris.ttf")
-}
-
-function setup() {
-  createCanvas(1600, 1200);
+  background1 = loadImage("images/background.png")
+  playButton = loadImage("images/playButton.png");
+  playButtonHighlighted = loadImage("images/playButtonHighlighted.png");
+  purpleCube = loadImage("images/purpleCube.png");
+  blueCube = loadImage("images/blueCube.png");
+  redCube = loadImage("images/redCube.png");
+  orangeCube = loadImage("images/orangeCube.png");
+  greenCube = loadImage("images/greenCube.png");
+  yellowCube = loadImage("images/yellowCube.png");
+  border1 = loadImage("images/border1.png");
+  tetrisFont = loadFont("assets/ModernTetris.ttf");
 }
 
 Array.prototype.sample = function() {
   return this[Math.floor(Math.random() * this.length)];
+}
+
+function setup() {
+  createCanvas(1600, 1200);
+  secondShape = shapes.sample();
+  thirdShape = shapes.sample();
+  randomColor = colors.sample();
 }
 
 // Functions //
@@ -86,21 +104,34 @@ function playButtonFun() {
 ////////////////////////////////////////////////////////////////////////////////
 
 function displayGameScreen() {
-  background(0);
-  stroke(255);
+  image(background1, 0, 0)
+  infoBar()
+  stroke(255, 255, 255, 50);
   for (let x = 0; x < 10; x++) {
     for (let y = 0; y < 18; y++) {
       if (grid[y][x] === 0) {
-        fill(100);
+        fill(100, 100, 255, 100);
+        stroke(255, 255, 255, 50);
       }
       if (grid[y][x] === 1) {
-        fill(0, 100, 100);
+        fill(255, 255, 255, 0)
+        noStroke()
+        if (randomColor === 'purpleCube') {
+          image(purpleCube, 550 + x * cellSize, 200 + y * cellSize)
+        } else if (randomColor === 'blueCube') {
+          image(blueCube, 550 + x * cellSize, 200 + y * cellSize)
+        } else if (randomColor === 'greenCube') {
+          image(greenCube, 550 + x * cellSize, 200 + y * cellSize)
+        } else if (randomColor === 'redCube') {
+          image(redCube, 550 + x * cellSize, 200 + y * cellSize)
+        } else if (randomColor === 'orangeCube') {
+          image(orangeCube, 550 + x * cellSize, 200 + y * cellSize)
+        }
       }
       if (grid[y][x] === 2) {
-        fill("green");
-      }
-      if (grid[y][x] === 3) {
-        fill("red");
+        fill(255, 255, 255, 0)
+        noStroke()
+        image(yellowCube, 550 + x * cellSize, 200 + y * cellSize)
       }
       rect(550 + x * cellSize, 200 + y * cellSize, cellSize, cellSize);
     }
@@ -115,53 +146,60 @@ function displayGameScreen() {
 function pickShape() {
   if (spaceFree === true) {
     spaceFree = false;
-    currentShape = shapes.sample();
-    spawnShape()
+    randomColor = colors.sample();
+    currentShape = secondShape;
+    secondShape = thirdShape;
+    thirdShape = shapes.sample();
+    spawnShape(currentShape)
     for (let x = 0; x < shapeGrid.length; x++) {
       for (let y = 0; y < shapeGrid.length; y++) {
-        grid[0 + x][5 + y] = shapeGrid[x][y]
+        if (grid[x][y + 5] === 2) {
+          death()
+        } else {
+          grid[x][y + 5] = shapeGrid[x][y]
+        }
       }
     }
   }
 }
 
-function spawnShape() {
-  if (currentShape === 'I') {
+function spawnShape(shape) {
+  if (shape === 'I') {
     shapeGrid = [
       [0, 1, 0],
       [0, 1, 0],
       [0, 1, 0],
     ];
-  } else if (currentShape === 'L') {
+  } else if (shape === 'L') {
     shapeGrid = [
       [0, 1, 0],
       [0, 1, 0],
       [0, 1, 1],
     ];
-  } else if (currentShape === 'Z') {
+  } else if (shape === 'Z') {
     shapeGrid = [
       [1, 1, 0],
       [0, 1, 1],
       [0, 0, 0],
     ];
-  } else if (currentShape === 'square') {
+  } else if (shape === 'square') {
     shapeGrid = [
       [1, 1],
       [1, 1],
     ];
-  } else if (currentShape === 'S') {
+  } else if (shape === 'S') {
     shapeGrid = [
       [0, 1, 1],
       [1, 1, 0],
       [0, 0, 0],
     ];
-  } else if (currentShape === 'J') {
+  } else if (shape === 'J') {
     shapeGrid = [
       [0, 1, 0],
       [0, 1, 0],
       [1, 1, 0],
     ];
-  } else if (currentShape === 'T') {
+  } else if (shape === 'T') {
     shapeGrid = [
       [1, 0, 0],
       [1, 1, 0],
@@ -295,13 +333,41 @@ function scoreChecker() {
         for (let x = 0; x < 10; x++) {
           grid[y][x] = 0
         }
+        for (let i = y - 1; i >= 0; i--) {
+          for (let j = 9; j >= 0; j--) {
+            print(grid[i][j])
+            grid[i + 1][j] = grid[i][j]
+            grid[i][j] = 0
+          }
+        }
       }
     }
   }
 }
 
+function infoBar() {
+  rect(0, 0, 1600, 75)
+  fill(255);
+  textSize(50);
+  textStyle(BOLD);
+  text("SCORE", 50, 60);
+  text(score, width / 2, 60)
+  text("NEXT", 1300, 300)
+  image(border1, 1300, 1325);
+  // Working on showing next shape //
+  // fill(randomColor)
+  // spawnShape(secondShape);
+}
+
 // Death Screen Functions //
 ////////////////////////////////////////////////////////////////////////////////
+
+function displayDeathScreen() {
+  fill("blue")
+  background(0)
+  textSize(100)
+  text("GAME OVER", 600, 600)
+}
 
 function death() {
   startScreenOn = false;
@@ -317,5 +383,8 @@ function draw() {
   }
   if (gameScreenOn === true) {
     displayGameScreen()
+  }
+  if (deathScreenOn === true) {
+    displayDeathScreen()
   }
 }
