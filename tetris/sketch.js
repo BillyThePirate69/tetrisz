@@ -323,6 +323,114 @@ function keyPressed() {
       }
     }
   }
+
+  if (keyCode === UP_ARROW) {
+    let rotateFree = true;
+
+    rotate:
+      for (let x = 0; x < 10; x++) {
+        for (let y = 0; y < 18; y++) {
+          if (grid[y][x] === 1) {
+            if (currentShape === "I") {
+              currentShape = "I90"
+              grid[y][x] = 0;
+              grid[y + 2][x] = 0;
+              grid[y + 1][x - 1] = 1;
+              grid[y + 1][x + 1] = 1;
+              break rotate;
+            }
+            if (currentShape === "I90") {
+              currentShape = "I"
+              grid[y][x] = 0;
+              grid[y][x + 2] = 0;
+              grid[y - 1][x + 1] = 1;
+              grid[y + 1][x + 1] = 1;
+              break rotate;
+            }
+            if (currentShape === "L") {
+              currentShape = "L90"
+              grid[y][x] = 0;
+              grid[y + 2][x] = 0;
+              grid[y + 1][x - 1] = 1;
+              grid[y + 1][x + 1] = 1;
+              grid[y + 2][x + 1] = 0;
+              grid[y][x + 1] = 1;
+              break rotate;
+            }
+            if (currentShape === "L90") {
+              currentShape = "L180"
+              grid[y][x] = 0;
+              grid[y - 1][x + 2] = 0;
+              grid[y][x + 2] = 0;
+              grid[y - 1][x + 1] = 1;
+              grid[y + 1][x + 1] = 1;
+              grid[y - 1][x] = 1;
+              break rotate;
+            }
+            if (currentShape === "L180") {
+              currentShape = "L270"
+              grid[y][x] = 0;
+              grid[y][x + 1] = 0;
+              grid[y + 2][x + 1] = 0;
+              grid[y + 1][x] = 1;
+              grid[y + 2][x] = 1;
+              grid[y + 1][x + 2] = 1;
+              break rotate;
+            }
+            if (currentShape === "L270") {
+              currentShape = "L"
+              grid[y][x] = 0;
+              grid[y + 1][x] = 0;
+              grid[y][x + 2] = 0;
+              grid[y - 1][x + 1] = 1;
+              grid[y + 1][x + 1] = 1;
+              grid[y + 1][x + 2] = 1;
+              break rotate;
+            }
+            if (currentShape === "J") {
+              currentShape = "J90"
+              grid[y][x] = 0;
+              grid[y - 2][x + 1] = 0;
+              grid[y][x + 1] = 0;
+              grid[y - 1][x] = 1;
+              grid[y - 2][x] = 1;
+              grid[y - 1][x + 2] = 1;
+              break rotate;
+            }
+            if (currentShape === "J90") {
+              currentShape = "J180"
+              grid[y][x] = 0;
+              grid[y][x + 2] = 1;
+              grid[y][x + 1] = 1;
+              grid[y + 1][x] = 0;
+              grid[y + 1][x + 2] = 0;
+              grid[y + 2][x + 1] = 1;
+              break rotate;
+            }
+            if (currentShape === "J180") {
+              currentShape = "J270"
+              grid[y][x] = 0;
+              grid[y + 2][x] = 0;
+              grid[y][x + 1] = 0;
+              grid[y + 1][x + 1] = 1;
+              grid[y + 2][x + 1] = 1;
+              grid[y + 1][x - 1] = 1;
+              break rotate;
+            }
+            if (currentShape === "J270") {
+              currentShape = "J"
+              grid[y][x] = 0;
+              grid[y][x + 2] = 0;
+              grid[y + 1][x + 2] = 0;
+              grid[y + 1][x] = 1;
+              grid[y + 1][x + 1] = 1;
+              grid[y - 1][x + 1] = 1;
+              break rotate;
+            }
+          }
+        }
+      }
+  }
 }
 
 function scoreChecker() {
