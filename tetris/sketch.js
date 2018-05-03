@@ -72,7 +72,8 @@ function setup() {
   createCanvas(1600, 1200);
   secondShape = shapes.sample();
   thirdShape = shapes.sample();
-  randomColor = colors.sample();
+  secondRandomColor = colors.sample();
+  thirdRandomColor = colors.sample();
 }
 
 // Functions //
@@ -146,7 +147,9 @@ function displayGameScreen() {
 function pickShape() {
   if (spaceFree === true) {
     spaceFree = false;
-    randomColor = colors.sample();
+    randomColor = secondRandomColor;
+    secondRandomColor = thirdRandomColor;
+    thirdRandomColor = colors.sample();
     currentShape = secondShape;
     secondShape = thirdShape;
     thirdShape = shapes.sample();
@@ -462,9 +465,25 @@ function infoBar() {
   text(score, width / 2, 60)
   text("NEXT", 1300, 300)
   image(border1, 1300, 1325);
-  // Working on showing next shape //
-  // fill(randomColor)
-  // spawnShape(secondShape);
+  spawnShape(secondShape);
+  for (let x = 0; x < shapeGrid.length; x++) {
+    for (let y = 0; y < shapeGrid.length; y++) {
+      if (shapeGrid[y][x] === 1) {
+        if (secondRandomColor === 'purpleCube') {
+          image(purpleCube, 1300 + x * cellSize, 320 + y * cellSize)
+        } else if (secondRandomColor === 'blueCube') {
+          image(blueCube, 1300 + x * cellSize, 320 + y * cellSize)
+        } else if (secondRandomColor === 'greenCube') {
+          image(greenCube, 1300 + x * cellSize, 320 + y * cellSize)
+        } else if (secondRandomColor === 'redCube') {
+          image(redCube, 1300 + x * cellSize, 320 + y * cellSize)
+        } else if (secondRandomColor === 'orangeCube') {
+          image(orangeCube, 1300 + x * cellSize, 320 + y * cellSize)
+        }
+      }
+    }
+  }
+}
 }
 
 // Death Screen Functions //
