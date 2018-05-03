@@ -1,5 +1,6 @@
 // Pair Programming Tetris(2d-Array based) //
 // Justyn Pollard //
+// Bill Tran//
 // April 18, 2018 //
 
 // global variables //
